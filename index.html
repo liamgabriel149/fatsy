@@ -1,34 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Notification With PRogress Bar</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta charset="UTF-8">
+  <title>Push Notification Demo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f0f0f0;
+    }
 
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <i class="fa-solid fa-circle-check check"></i>
 
-            <div class="message">
-                <span class="text text-1"> Subscribed </span>
-                <span class="text text-2"> Thank You For Subscribing </span>
-            </div>
-        </div>
+  <h2>Send Notification</h2>
+  <button onclick="sendNotification()">Notify Me</button>
 
-        <i class="fa-solid fa-circle-xmark close"></i>
+  <script>
+    // Ask for permission on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+    });
 
-        <div class="progress"></div>
-    </div>
+    function sendNotification() {
+      if (Notification.permission === "granted") {
+        new Notification("Reminder", {
+          body: "You're still in and it's after 5:30PM. Please update your status.",
+          icon: "https://cdn-icons-png.flaticon.com/512/1827/1827370.png" // Optional icon
+        });
+      } else {
+        alert("Please allow notifications in your browser settings.");
+      }
+    }
+  </script>
 
-
-    <button> SUBSCRIBE </button>
-
-
-    <script src="main.js"></script>
 </body>
 </html>
