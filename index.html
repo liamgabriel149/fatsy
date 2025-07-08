@@ -38,7 +38,11 @@
     // Ask for permission on page load
     document.addEventListener('DOMContentLoaded', () => {
       if (Notification.permission !== "granted") {
-        Notification.requestPermission();
+        Notification.requestPermission().then(permission => {
+          if (permission !== "granted") {
+            alert("Notification permission is required to show alerts.");
+          }
+        });
       }
     });
 
@@ -46,10 +50,10 @@
       if (Notification.permission === "granted") {
         new Notification("Reminder", {
           body: "You're still in and it's after 5:30PM. Please update your status.",
-          icon: "https://cdn-icons-png.flaticon.com/512/1827/1827370.png" // Optional icon
+          icon: "https://cdn-icons-png.flaticon.com/512/1827/1827370.png"
         });
       } else {
-        alert("Please allow notifications in your browser settings.");
+        alert("Notifications are not enabled. Please allow them.");
       }
     }
   </script>
