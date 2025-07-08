@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chat with Top Notification</title>
+  <title>All-in-One Chat App with Push</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -60,6 +60,7 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
 
@@ -88,10 +89,18 @@
 
 <script>
   const firebaseConfig = {
-    databaseURL: "https://fb-acc-d2f14-default-rtdb.asia-southeast1.firebasedatabase.app"
+    apiKey: "AIzaSyAT1SyYQTFUona0byHCi8BcrEW9pgo9BiA",
+    authDomain: "fb-acc-d2f14.firebaseapp.com",
+    databaseURL: "https://fb-acc-d2f14-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "fb-acc-d2f14",
+    storageBucket: "fb-acc-d2f14.appspot.com",
+    messagingSenderId: "225442444221",
+    appId: "1:225442444221:web:7d244ee7774ec4bc1098d4"
   };
+
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+  const messaging = firebase.messaging();
 
   let currentUser = null;
   let selectedUser = null;
@@ -104,6 +113,30 @@
   const userSelect = document.getElementById('userSelect');
   const chatBox = document.getElementById('chat');
   const msgInput = document.getElementById('msgInput');
+
+  // Create and register service worker dynamically
+  const swCode = `
+    importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
+    importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
+
+    firebase.initializeApp(${JSON.stringify(firebaseConfig)});
+    const messaging = firebase.messaging();
+    messaging.onBackgroundMessage(payload => {
+      const title = payload.notification.title;
+      const options = {
+        body: payload.notification.body,
+        icon: payload.notification.icon
+      };
+      self.registration.showNotification(title, options);
+    });
+  `;
+  const blob = new Blob([swCode], { type: "application/javascript" });
+  const swUrl = URL.createObjectURL(blob);
+
+  navigator.serviceWorker.register(swUrl).then(reg => {
+    messaging.useServiceWorker(reg);
+    console.log("Service Worker registered.");
+  });
 
   function uid(email) {
     return btoa(email).replace(/=/g, '');
@@ -143,7 +176,9 @@
         document.getElementById("loginDiv").style.display = "none";
         document.getElementById("chatDiv").style.display = "block";
         loadUsers();
-        requestNotificationPermission(); // ask for notif permission
+        messaging.getToken({ vapidKey: "YOUR_PUBLIC_VAPID_KEY" }).then(token => {
+          db.ref("users/" + userId + "/token").set(token);
+        });
       }
     });
   }
@@ -189,42 +224,48 @@
       div.textContent = msg.text;
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
-
-      // show browser notification
-      if (msg.from !== currentUser.uid && Notification.permission === "granted") {
-        const senderEmail = userSelect.options[userSelect.selectedIndex]?.text || "User";
-        new Notification(`New message from ${senderEmail}`, {
-          body: msg.text,
-        });
-      }
     });
   }
 
   function sendMessage() {
     const text = msgInput.value.trim();
     if (!text || !selectedUser) return;
+
     const msgObj = {
       from: currentUser.uid,
       to: selectedUser,
       text,
       timestamp: Date.now()
     };
+
     const newKey = db.ref().push().key;
     const updates = {};
     updates[`messages/${currentUser.uid}/${selectedUser}/${newKey}`] = msgObj;
     updates[`messages/${selectedUser}/${currentUser.uid}/${newKey}`] = msgObj;
-    db.ref().update(updates);
-    msgInput.value = '';
-  }
 
-  function requestNotificationPermission() {
-    if ('Notification' in window && Notification.permission !== 'granted') {
-      Notification.requestPermission().then(permission => {
-        if (permission !== 'granted') {
-          alert("Notifications are disabled. You won't see popups for new messages.");
+    db.ref().update(updates).then(() => {
+      msgInput.value = '';
+      db.ref("users/" + selectedUser + "/token").once('value').then(snapshot => {
+        const token = snapshot.val();
+        if (token) {
+          fetch("https://fcm.googleapis.com/fcm/send", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "key=YOUR_SERVER_KEY"
+            },
+            body: JSON.stringify({
+              to: token,
+              notification: {
+                title: currentUser.email,
+                body: text,
+                icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png"
+              }
+            })
+          });
         }
       });
-    }
+    });
   }
 </script>
 
