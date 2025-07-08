@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Push Notification Demo</title>
+</head>
+<body>
+  <button onclick="notifyUser()">Notify Me</button>
+
+  <script>
+    // Ask for permission to send notifications
+    async function askPermission() {
+      const permission = await Notification.requestPermission();
+      return permission === 'granted';
+    }
+
+    // Show the notification
+    async function notifyUser() {
+      const granted = await askPermission();
+      if (granted) {
+        new Notification("🔔 New Message!", {
+          body: "You have a new notification like Facebook!",
+          icon: "https://www.facebook.com/favicon.ico"
+        });
+      } else {
+        alert("Notification permission not granted.");
+      }
+    }
+  </script>
+</body>
+</html>
