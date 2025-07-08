@@ -1,30 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Push Notification Demo</title>
+  <title>Real Push Notification</title>
 </head>
 <body>
-  <button onclick="notifyUser()">Notify Me</button>
+  <h1>Enable Push Notifications</h1>
+  <button onclick="subscribe()">Subscribe</button>
 
   <script>
-    // Ask for permission to send notifications
-    async function askPermission() {
-      const permission = await Notification.requestPermission();
-      return permission === 'granted';
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        console.log('Service Worker registered', reg);
+      });
     }
 
-    // Show the notification
-    async function notifyUser() {
-      const granted = await askPermission();
-      if (granted) {
-        new Notification("🔔 New Message!", {
-          body: "You have a new notification like Facebook!",
-          icon: "https://www.facebook.com/favicon.ico"
-        });
-      } else {
-        alert("Notification permission not granted.");
+    async function subscribe() {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert("Notifications not allowed.");
+        return;
       }
+
+      const reg = await navigator.serviceWorker.ready;
+
+      const subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: '<YOUR_VAPID_PUBLIC_KEY>' // replace with your key
+      });
+
+      // Send subscription to your server
+      await fetch('/subscribe', {
+        method: 'POST',
+        body: JSON.stringify(subscription),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      alert("Subscribed to push!");
     }
   </script>
 </body>
