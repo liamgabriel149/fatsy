@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Messenger-Style Chat App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messenger Chat App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
     * {
       box-sizing: border-box;
@@ -16,13 +18,22 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      max-width: 500px;
+      margin: auto;
+      border-left: 1px solid #444;
+      border-right: 1px solid #444;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
     h2 {
       text-align: center;
-      margin: 0.5em 0;
+      margin: 0;
+      padding: 1em;
+      background: #000;
+      font-size: 1.2em;
+      border-bottom: 1px solid #333;
       color: #00aaff;
     }
-    input, select, button {
+    input, button {
       width: 100%;
       margin: 0.3em 0;
       padding: 0.6em;
@@ -30,7 +41,7 @@
       border-radius: 8px;
       border: none;
     }
-    input, select {
+    input {
       background: #2e2e2e;
       color: white;
       border: 1px solid #444;
@@ -55,35 +66,75 @@
     #chatDiv {
       display: none;
     }
+    #chatDiv > p {
+      background: #111;
+      padding: 0.6em 1em;
+      margin: 0;
+      font-size: 0.9em;
+      border-bottom: 1px solid #333;
+    }
+
+    #userList {
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 0.5em 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+      border-bottom: 1px solid #333;
+      margin-bottom: 0.5em;
+    }
+
+    .user-item {
+      padding: 0.6em 1em;
+      background: #2a2a2a;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .user-item:hover {
+      background: #3a3a3a;
+    }
+    .user-item.active {
+      background: #0078ff;
+    }
+
     #chat {
       flex: 1;
       overflow-y: auto;
-      padding: 1em;
-      margin-bottom: 70px;
+      padding: 0.8em;
+      padding-bottom: 80px;
       display: flex;
       flex-direction: column;
     }
+
     .msg {
-      padding: 0.6em 1em;
+      padding: 0.7em 1em;
       border-radius: 18px;
       margin: 0.3em 0;
       max-width: 75%;
       line-height: 1.4;
       word-wrap: break-word;
       display: inline-block;
+      font-size: 0.95em;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
     }
+
     .from-me {
       background: #0078ff;
       color: white;
       align-self: flex-end;
       border-bottom-right-radius: 4px;
     }
+
     .from-other {
       background: #3a3a3a;
       color: white;
       align-self: flex-start;
       border-bottom-left-radius: 4px;
     }
+
     #messageBar {
       position: fixed;
       bottom: 0;
@@ -94,7 +145,10 @@
       display: flex;
       gap: 0.5em;
       border-top: 1px solid #444;
+      max-width: 500px;
+      margin: auto;
     }
+
     #msgInput {
       flex: 1;
       padding: 0.6em;
@@ -102,8 +156,11 @@
       border: none;
       background: #2e2e2e;
       color: white;
+      font-size: 1rem;
     }
   </style>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
@@ -125,7 +182,7 @@
     Logged in as <span id="currentUserEmail"></span>
     <button onclick="logout()" style="float:right;background:#e74c3c;">Logout</button>
   </p>
-  <select id="userSelect"><option value="">Select a user</option></select>
+  <div id="userList"></div>
   <div id="chat"></div>
 </div>
 
@@ -157,11 +214,9 @@
   const passwordInput = document.getElementById('passwordInput');
   const loginMsg = document.getElementById('loginMsg');
   const currentUserEmail = document.getElementById('currentUserEmail');
-  const userSelect = document.getElementById('userSelect');
   const chatBox = document.getElementById('chat');
   const msgInput = document.getElementById('msgInput');
 
-  // Service Worker for Push
   const swCode = `
     importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
     importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
@@ -239,23 +294,26 @@
   }
 
   function loadUsers() {
-    userSelect.innerHTML = '<option value="">Select a user</option>';
+    const userListDiv = document.getElementById("userList");
+    userListDiv.innerHTML = '';
     db.ref("users").once('value').then(snapshot => {
       snapshot.forEach(child => {
         if (child.key !== currentUser.uid) {
-          const opt = document.createElement("option");
-          opt.value = child.key;
-          opt.textContent = child.val().email;
-          userSelect.appendChild(opt);
+          const div = document.createElement("div");
+          div.className = "user-item";
+          div.textContent = child.val().email;
+          div.dataset.uid = child.key;
+          div.onclick = () => {
+            selectedUser = child.key;
+            document.querySelectorAll(".user-item").forEach(item => item.classList.remove("active"));
+            div.classList.add("active");
+            loadChat();
+          };
+          userListDiv.appendChild(div);
         }
       });
     });
   }
-
-  userSelect.addEventListener("change", () => {
-    selectedUser = userSelect.value;
-    loadChat();
-  });
 
   function loadChat() {
     if (chatRef) chatRef.off();
