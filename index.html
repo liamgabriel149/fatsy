@@ -2,156 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Simple Chat (Firebase DB only)</title>
+  <title>Simple Chat with Top Notification</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 480px; margin: 2em auto; }
-    input, select, button { font-size: 1rem; margin: 0.3em 0; padding: 0.5em; width: 100%; }
-    #chat { border: 1px solid #ccc; height: 300px; overflow-y: auto; padding: 1em; margin-top: 1em; }
-    .msg { margin: 0.5em 0; }
-    .from-me { text-align: right; color: green; }
-    .from-other { text-align: left; color: blue; }
-    #loginDiv, #chatDiv { display: none; }
-
-body {
-  font-family: Arial, sans-serif;
-  max-width: 480px;
-  margin: 2em auto;
-  background: #f9f9f9;
-  color: #333;
-}
-
-h2 {
-  text-align: center;
-  margin-bottom: 1em;
-}
-
-input, select, button {
-  font-size: 1rem;
-  margin: 0.3em 0;
-  padding: 0.5em;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-input:focus, select:focus, button:focus {
-  border-color: #4a76a8;
-  outline: none;
-}
-
-button {
-  background-color: #4a76a8;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #3b5a7a;
-}
-
-#chat {
-  border: 1px solid #ccc;
-  background: white;
-  height: 300px;
-  overflow-y: auto;
-  padding: 1em;
-  margin-top: 1em;
-  border-radius: 8px;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
-}
-
-.msg {
-  margin: 0.5em 0;
-  max-width: 70%;
-  padding: 0.5em 0.75em;
-  border-radius: 15px;
-  word-wrap: break-word;
-  font-size: 0.95rem;
-  line-height: 1.3;
-  user-select: text;
-}
-
-.from-me {
-  margin-left: auto;
-  background-color: #dcf8c6;
-  border-bottom-right-radius: 0;
-  text-align: right;
-}
-
-.from-other {
-  margin-right: auto;
-  background-color: white;
-  border-bottom-left-radius: 0;
-  box-shadow: 0 1px 1.5px rgba(0,0,0,0.1);
-  text-align: left;
-}
-
-#msgInput {
-  margin-top: 1em;
-}
-
-#logoutBtn {
-  background-color: #e74c3c;
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 0.3em 0.6em;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#logoutBtn:hover {
-  background-color: #c0392b;
-}
-
-p {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.5em 0;
-  font-weight: 600;
-}
-
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 480px;
+      margin: 2em auto;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    input, select, button {
+      font-size: 1rem;
+      margin: 0.3em 0;
+      padding: 0.5em;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, select:focus, button:focus {
+      border-color: #4a76a8;
+      outline: none;
+    }
+    button {
+      background-color: #4a76a8;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #3b5a7a;
+    }
+    #chat {
+      border: 1px solid #ccc;
+      background: white;
+      height: 300px;
+      overflow-y: auto;
+      padding: 1em;
+      margin-top: 1em;
+      border-radius: 8px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+    .msg {
+      margin: 0.5em 0;
+      max-width: 70%;
+      padding: 0.5em 0.75em;
+      border-radius: 15px;
+      word-wrap: break-word;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      user-select: text;
+    }
+    .from-me {
+      margin-left: auto;
+      background-color: #dcf8c6;
+      border-bottom-right-radius: 0;
+      text-align: right;
+    }
+    .from-other {
+      margin-right: auto;
+      background-color: white;
+      border-bottom-left-radius: 0;
+      box-shadow: 0 1px 1.5px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    #msgInput {
+      margin-top: 1em;
+    }
+    #logoutBtn {
+      background-color: #e74c3c;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.3em 0.6em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #logoutBtn:hover {
+      background-color: #c0392b;
+    }
+    p {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.5em 0;
+      font-weight: 600;
+    }
+    #newMessageNotification {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4a76a8;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-weight: 600;
+      font-size: 1rem;
+      display: none;
+      z-index: 9999;
+      max-width: 90%;
+      text-align: center;
+      pointer-events: none;
+      user-select: none;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
-<h2>Simple Firebase Chat</h2>
+<h2>Simple Chat with Top Notification</h2>
 
 <div id="loginDiv">
   <h3>Login or Sign Up</h3>
-  <input id="emailInput" placeholder="Email" type="email" />
-  <input id="passwordInput" placeholder="Password" type="password" />
+  <input id="emailInput" placeholder="Email" type="email" autocomplete="username"/>
+  <input id="passwordInput" placeholder="Password" type="password" autocomplete="current-password"/>
   <button id="signupBtn">Sign Up</button>
   <button id="loginBtn">Log In</button>
-  <div id="loginMsg" style="color:red;"></div>
+  <div id="loginMsg" style="color:red; min-height:1.5em;"></div>
 </div>
 
-<div id="chatDiv">
+<div id="chatDiv" style="display:none;">
   <p>Logged in as <span id="currentUserEmail"></span> <button id="logoutBtn">Log out</button></p>
   <select id="userSelect"><option value="">Select user to chat</option></select>
   <div id="chat"></div>
-  <input id="msgInput" placeholder="Type message..." />
+  <input id="msgInput" placeholder="Type message..." autocomplete="off" />
   <button id="sendBtn">Send</button>
 </div>
 
+<div id="newMessageNotification"></div>
+
 <script>
-  // Your Firebase config here (only databaseURL needed)
   const firebaseConfig = {
     databaseURL: "https://fb-acc-d2f14-default-rtdb.asia-southeast1.firebasedatabase.app"
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // DOM elements
   const loginDiv = document.getElementById('loginDiv');
   const chatDiv = document.getElementById('chatDiv');
   const emailInput = document.getElementById('emailInput');
@@ -165,40 +162,35 @@ p {
   const chatBox = document.getElementById('chat');
   const msgInput = document.getElementById('msgInput');
   const sendBtn = document.getElementById('sendBtn');
+  const newMessageNotification = document.getElementById('newMessageNotification');
 
   let currentUser = null; // {uid, email}
   let selectedUser = null;
   let chatListener = null;
 
-  // Generate simple UID from email (hash or base64)
   function generateUid(email) {
     return btoa(email).replace(/=/g,'');
   }
 
-  // Show login, hide chat
   function showLogin() {
     loginDiv.style.display = 'block';
     chatDiv.style.display = 'none';
   }
-  // Show chat, hide login
   function showChat() {
     loginDiv.style.display = 'none';
     chatDiv.style.display = 'block';
   }
 
-  // Save user in DB
   function saveUser(email, password) {
     const uid = generateUid(email);
     return db.ref('users/' + uid).get().then(snapshot => {
       if(snapshot.exists()) {
         return Promise.reject('User already exists');
       }
-      // Store plain password (NOT secure! For demo only)
       return db.ref('users/' + uid).set({ email, password });
     });
   }
 
-  // Check login
   function checkLogin(email, password) {
     const uid = generateUid(email);
     return db.ref('users/' + uid).get().then(snapshot => {
@@ -209,7 +201,6 @@ p {
     });
   }
 
-  // Load all users except current user
   function loadUsers() {
     db.ref('users').get().then(snapshot => {
       userSelect.innerHTML = '<option value="">Select user to chat</option>';
@@ -221,7 +212,6 @@ p {
     });
   }
 
-  // Listen to messages with selected user
   function listenMessages() {
     if(chatListener) chatListener.off();
     chatBox.innerHTML = '';
@@ -235,14 +225,15 @@ p {
       div.textContent = m.text;
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
-      // Notify if from other user
-      if(m.from !== currentUser.uid && Notification.permission === 'granted') {
-        new Notification('New message from ' + m.from, { body: m.text });
+      // Show top on-screen notification only for messages from other user
+      if(m.from !== currentUser.uid) {
+        // Show notification with sender email + text
+        const senderEmail = userSelect.options[userSelect.selectedIndex]?.text || 'Someone';
+        showNewMessageNotification(`New message from ${senderEmail}: ${m.text}`);
       }
     });
   }
 
-  // Send message
   function sendMessage() {
     if(!selectedUser) {
       alert('Select user to chat with');
@@ -262,7 +253,6 @@ p {
     msgInput.value = '';
   }
 
-  // Login and Signup handlers
   signupBtn.onclick = () => {
     loginMsg.textContent = '';
     const email = emailInput.value.trim();
@@ -315,14 +305,16 @@ p {
 
   sendBtn.onclick = sendMessage;
 
-  // Notifications permission request
-  if('Notification' in window && Notification.permission !== 'granted') {
-    Notification.requestPermission();
+  function showNewMessageNotification(text) {
+    newMessageNotification.textContent = text;
+    newMessageNotification.style.display = 'block';
+    clearTimeout(newMessageNotification.hideTimeout);
+    newMessageNotification.hideTimeout = setTimeout(() => {
+      newMessageNotification.style.display = 'none';
+    }, 4000);
   }
 
-  // Start with login screen
   showLogin();
-
 </script>
 
 </body>
