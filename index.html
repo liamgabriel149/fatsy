@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /> </br></br></br>
+  <meta charset="UTF-8" />
   <title>Candidate Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
@@ -42,6 +42,7 @@
       border-radius: 5px;
       color: var(--text);
       margin-bottom: 15px;
+      text-transform: uppercase;
     }
     select option {
       background: var(--input);
@@ -145,10 +146,10 @@
     <div id="topLeftButtons">
       <button id="viewParticipantsBtn" class="submit-btn">📋 View Records</button>
       <button id="deleteRecordBtn" class="submit-btn" style="background-color:#e04e4e;">🗑️ Delete Record</button>
-      <button onclick="generatePDF()" class="submit-btn">📄 Generate PDF</button> </br> </br> </br>
+      <button onclick="generatePDF()" class="submit-btn">📄 Generate PDF</button>
     </div>
-</br> </br>
-    <h2>Candidate Registration Form </br>  USE ALL CAPS </h2>
+
+    <h2>Candidate Registration Form<br>USE ALL CAPS</h2>
     <form id="candidateForm">
       <label>Full Name:</label><input type="text" id="fullName" required>
       <label>Age:</label><input type="number" id="age" required>
@@ -176,6 +177,11 @@
         <tbody>
           <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
           <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
         </tbody>
       </table>
 
@@ -183,7 +189,11 @@
       <table id="grades">
         <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
         <tbody id="gradesBody"></tbody>
-      </table> 
+      </table>
+
+      <label>Photo:</label><input type="file" id="photo" accept="image/*">
+      <label>Signature:</label><input type="file" id="signature" accept="image/*">
+
       <button type="submit" class="submit-btn">Submit</button>
     </form>
 
@@ -197,13 +207,14 @@
     <button id="exitModalBtn" class="submit-btn">Exit</button>
   </div>
 
-  <!-- Libraries -->
+  <!-- Firebase + JS Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.5/pizzip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.36.2/docxtemplater.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script type="module">
+    // Firebase Config
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
@@ -216,6 +227,7 @@
     const db = getDatabase(app);
     const storage = getStorage(app);
 
+    // Fill subjects table (12 rows)
     const gradesBody = document.getElementById("gradesBody");
     for (let i = 0; i < 12; i++) {
       const row = document.createElement("tr");
@@ -231,9 +243,7 @@
     let currentCandidateKey = null;
     let currentCandidateData = null;
 
-    viewParticipantsBtn.onclick = () => {
-      modal.style.display = modal.style.display === "block" ? "none" : "block";
-    };
+    viewParticipantsBtn.onclick = () => modal.style.display = modal.style.display === "block" ? "none" : "block";
     exitModalBtn.onclick = () => modal.style.display = "none";
 
     async function uploadFile(file, folder, namePrefix) {
@@ -343,17 +353,9 @@
         form.reset();
         generateWordDoc(data);
         currentCandidateKey = null;
+        currentCandidateData = null;
       });
     });
-
-    window.downloadImage = (src, name) => {
-      const a = document.createElement("a");
-      a.href = src;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    };
 
     const listDiv = document.getElementById("participantList");
     const recordsContainer = document.getElementById("recordsContainer");
@@ -399,11 +401,18 @@
       });
     });
 
-    // ✅ PDF Generation Function
+    window.downloadImage = (src, name) => {
+      const a = document.createElement("a");
+      a.href = src;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+
     window.generatePDF = function () {
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF();
-
       const container = document.getElementById("recordsContainer");
       const records = container.querySelectorAll(".record");
 
