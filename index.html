@@ -1,3 +1,4 @@
+<!-- Filename: candidate_registration.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -143,6 +144,7 @@
   <div class="container">
     <div id="topLeftButtons">
       <button id="viewParticipantsBtn" class="submit-btn">📋 View Records</button>
+      <button id="deleteRecordBtn" class="submit-btn" style="background-color:#e04e4e;">🗑️ Delete Record</button>
       <button onclick="generatePDF()" class="submit-btn">📄 Generate PDF</button>
     </div>
 
@@ -383,20 +385,14 @@
         const div = document.createElement("div");
         div.className = "record";
         div.innerHTML = `
-  <strong>${val.fullName}</strong><br>
-  📌 Position: ${val.position}<br>
-  🎓 Course/Year: ${val.courseYear}<br>
-  📧 Email: ${val.email}<br>
-  📱 Cellphone: ${val.cellphone}<br><br>
-
-  ${createImageSection("Photo", val.photo, val.fullName)}
-  ${createImageSection("Signature", val.signature, val.fullName)}
-
-  <br>
-  <button class="submit-btn" onclick='fillForm(${JSON.stringify(val)}, "${key}")'>📋 View</button>
-  <button class="submit-btn" style="background-color:#e04e4e;" onclick='deleteRecordById("${key}")'>🗑️ Delete</button>
-  <button class="submit-btn" onclick='generateWordDoc(${JSON.stringify(val)})'>📄 Generate DOCX</button>
-`;
+          <strong>${val.fullName}</strong><br>
+          📌 Position: ${val.position}<br>
+          🎓 Course/Year: ${val.courseYear}<br>
+          📧 Email: ${val.email}<br>
+          📱 Cellphone: ${val.cellphone}
+          ${createImageSection("Photo", val.photo, val.fullName)}
+          ${createImageSection("Signature", val.signature, val.fullName)}
+        `;
         recordsContainer.appendChild(div);
 
         const entry = document.createElement("div");
@@ -410,12 +406,7 @@
       });
     });
 
-    window.deleteRecordById = (key) => {
-      if (confirm("Are you sure to delete this record?")) {
-        remove(ref(db, `candidates/${key}`)).then(() => alert("Record deleted."));
-      }
-    };
-
+    // ✅ PDF Generation Function
     window.generatePDF = function () {
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF();
