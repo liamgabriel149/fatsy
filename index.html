@@ -2,426 +2,441 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Messenger Chat App</title>
+  <title>Candidate Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --background: #121212;
+      --card: #1e1e1e;
+      --input: #2c2c2c;
+      --border: #333;
+      --text: #fff;
+      --accent: #3897f0;
     }
-
     body {
       margin: 0;
+      padding: 20px;
       font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background-color: var(--background);
+      color: var(--text);
     }
-
     .container {
-      width: 100%;
-      max-width: 500px;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: #1e1e1e;
-      border-left: 1px solid #333;
-      border-right: 1px solid #333;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-
-    h2 {
-      text-align: center;
-      margin: 0;
-      padding: 1em;
-      background: #000;
-      font-size: 1.2em;
-      border-bottom: 1px solid #333;
-      color: #00aaff;
-    }
-
-    #loginDiv {
-      padding: 2em;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    input, button {
-      font-size: 1rem;
-      border-radius: 10px;
-      border: none;
-    }
-
-    input {
-      width: 100%;
-      margin: 0.4em 0;
-      padding: 0.8em;
-      background: #2e2e2e;
-      color: white;
-      border: 1px solid #444;
-    }
-
-    button {
-      background: #0078ff;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 0.8em;
-      margin-top: 0.4em;
-    }
-
-    button:hover {
-      background: #005ecb;
-    }
-
-    #chatDiv {
-      display: none;
-      flex: 1;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    #userList {
-      max-height: 150px;
-      overflow-y: auto;
-      padding: 0.5em;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5em;
-      border-bottom: 1px solid #333;
-    }
-
-    .user-item {
-      padding: 0.6em 1em;
-      background: #2a2a2a;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .user-item.active {
-      background: #0078ff;
-    }
-
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.8em;
-      padding-bottom: 90px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .msg {
-      padding: 0.7em 1em;
-      border-radius: 18px;
-      margin: 0.3em 0;
-      max-width: 75%;
-      font-size: 0.95em;
-      line-height: 1.4;
-      word-wrap: break-word;
-    }
-
-    .msg img, .msg video {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-top: 0.4em;
-    }
-
-    .from-me {
-      background: #0078ff;
-      color: white;
-      align-self: flex-end;
-    }
-
-    .from-other {
-      background: #3a3a3a;
-      color: white;
-      align-self: flex-start;
-    }
-
-    .loading-msg {
-      font-size: 0.9em;
-      color: #aaa;
-      font-style: italic;
-      margin: 0.5em 0;
-      align-self: flex-end;
-    }
-
-    #messageBar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      max-width: 1000px;
       margin: auto;
-      background: #1e1e1e;
-      border-top: 1px solid #444;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5em;
-      padding: 0.5em;
-      max-width: 500px;
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+      position: relative;
     }
-
-    #msgInput {
-      flex: 1;
-      padding: 0.9em 1em;
-      border-radius: 25px;
-      background: #2e2e2e;
-      border: none;
-      color: white;
-      font-size: 1rem;
+    h2, h3 {
+      color: var(--accent);
+      margin-top: 60px;
     }
-
-    #uploadBtn, #sendBtn {
-      background: #444;
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      background-color: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      margin-bottom: 15px;
+    }
+    select option {
+      background: var(--input);
+      color: var(--text);
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px;
+    }
+    th {
+      background-color: #222;
+    }
+    .submit-btn {
+      background-color: var(--accent);
       color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
       border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
     }
-
-    #fileInput {
+    .submit-btn:hover {
+      background-color: #2f80ed;
+    }
+    .record {
+      background: #222;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+    #participantModal {
       display: none;
+      position: fixed;
+      top: 60px;
+      left: 20px;
+      width: 320px;
+      background: #1e1e1e;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-height: 80vh;
+      overflow: auto;
+      z-index: 999;
+    }
+    #topLeftButtons {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+    }
+    #exitModalBtn {
+      background-color: #e04e4e;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .thumbnail {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 6px;
+      margin: 5px 0;
+      display: block;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      background: var(--input);
+    }
+    .image-container {
+      margin-top: 8px;
+    }
+    .download-btn {
+      background-color: var(--accent);
+      border: none;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 2px;
+      font-size: 12px;
+      display: inline-block;
+    }
+    .download-btn:hover {
+      background-color: #2f80ed;
     }
   </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
+  <div class="container">
+    <div id="topLeftButtons">
+      <button id="viewParticipantsBtn" class="submit-btn">📋 View Records</button>
+      <button onclick="generatePDF()" class="submit-btn">📄 Generate PDF</button>
+    </div>
 
-<div class="container">
-  <h2>Messenger Chat</h2>
+    <h2>Candidate Registration Form</h2>
+    <form id="candidateForm">
+      <label>Full Name:</label><input type="text" id="fullName" required>
+      <label>Age:</label><input type="number" id="age" required>
+      <label>Sex:</label>
+      <select id="sex" required>
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+      <label>Course and Year/Section:</label><input type="text" id="courseYear" required>
+      <label>Date of Birth:</label><input type="date" id="dob" required>
+      <label>Place of Birth:</label><input type="text" id="pob">
+      <label>Nationality:</label><input type="text" id="nationality">
+      <label>Religion:</label><input type="text" id="religion">
+      <label>Cellphone Number:</label><input type="text" id="cellphone">
+      <label>Email Address:</label><input type="email" id="email">
+      <label>Landline (Optional):</label><input type="text" id="landline">
+      <label>Position in Party:</label><input type="text" id="position">
+      <label>Reason for Running:</label><textarea id="reason"></textarea>
 
-  <div id="loginDiv">
-    <input id="emailInput" type="email" placeholder="Email" />
-    <input id="passwordInput" type="password" placeholder="Password" />
-    <button onclick="signup()">Sign Up</button>
-    <button onclick="login()">Login</button>
-    <div id="loginMsg" style="color:red;min-height:1.5em;"></div>
+      <label>Affiliations (Clubs/Org/Position/Year):</label>
+      <table id="affiliations">
+        <thead><tr><th>Club/Org</th><th>Position</th><th>Year</th></tr></thead>
+        <tbody>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+      </table>
+
+      <label>Subjects & Grades:</label>
+      <table id="grades">
+        <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody id="gradesBody"></tbody>
+      </table>
+
+      <label>Upload Photo:</label>
+      <input type="file" id="photo" accept="image/*">
+
+      <label>Upload E-Signature:</label>
+      <input type="file" id="signature" accept="image/*">
+
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+
+    <h3>Submitted Candidates</h3>
+    <div id="recordsContainer"></div>
   </div>
 
-  <div id="chatDiv">
-    <p style="padding:0.5em">
-      Logged in as <span id="currentUserEmail"></span>
-      <button onclick="logout()" style="float:right;background:#e74c3c;">Logout</button>
-    </p>
-    <div id="userList"></div>
-    <div id="chat"></div>
+  <div id="participantModal">
+    <h3 style="color:var(--accent);">Submitted Candidates</h3>
+    <div id="participantList"></div>
+    <button id="exitModalBtn" class="submit-btn">Exit</button>
   </div>
-</div>
 
-<div id="messageBar">
-  <input id="msgInput" placeholder="Type a message..." />
-  <input type="file" id="fileInput" accept="image/*,video/*" onchange="sendMedia()" />
-  <button id="uploadBtn" onclick="document.getElementById('fileInput').click()">📎</button>
-  <button id="sendBtn" onclick="sendMessage()">➤</button>
-</div>
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.5/pizzip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.36.2/docxtemplater.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAT1SyYQTFUona0byHCi8BcrEW9pgo9BiA",
-    authDomain: "fb-acc-d2f14.firebaseapp.com",
-    databaseURL: "https://fb-acc-d2f14-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "fb-acc-d2f14",
-    storageBucket: "fb-acc-d2f14.appspot.com",
-    messagingSenderId: "225442444221",
-    appId: "1:225442444221:web:7d244ee7774ec4bc1098d4"
-  };
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    const firebaseConfig = {
+      databaseURL: "https://caps201-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
 
-  let currentUser = null;
-  let selectedUser = null;
-  let chatRef = null;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
 
-  function uid(email) {
-    return btoa(email).replace(/=/g, '');
-  }
-
-  function signup() {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    if (!email || !password) {
-      loginMsg.textContent = "Email and password required.";
-      return;
+    const gradesBody = document.getElementById("gradesBody");
+    for (let i = 0; i < 12; i++) {
+      const row = document.createElement("tr");
+      row.innerHTML = '<td><input type="text"></td><td><input type="text"></td>';
+      gradesBody.appendChild(row);
     }
-    const userId = uid(email);
-    db.ref("users/" + userId).once('value').then(snapshot => {
-      if (snapshot.exists()) {
-        loginMsg.textContent = "User already exists.";
-      } else {
-        db.ref("users/" + userId).set({ email, password });
-        loginMsg.textContent = "Signed up! Please log in.";
-        emailInput.value = "";
-        passwordInput.value = "";
-      }
-    });
-  }
 
-  function login() {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    const userId = uid(email);
-    db.ref("users/" + userId).once('value').then(snapshot => {
-      const user = snapshot.val();
-      if (!user) {
-        loginMsg.textContent = "User not found.";
-      } else if (user.password !== password) {
-        loginMsg.textContent = "Wrong password.";
-      } else {
-        currentUser = { uid: userId, email };
-        document.getElementById('currentUserEmail').textContent = email;
-        document.getElementById("loginDiv").style.display = "none";
-        document.getElementById("chatDiv").style.display = "flex";
-        document.getElementById("messageBar").style.display = "flex";
-        loadUsers();
-      }
-    });
-  }
+    const modal = document.getElementById("participantModal");
+    const viewParticipantsBtn = document.getElementById("viewParticipantsBtn");
+    const exitModalBtn = document.getElementById("exitModalBtn");
+    const deleteRecordBtn = document.getElementById("deleteRecordBtn");
 
-  function logout() {
-    currentUser = null;
-    selectedUser = null;
-    if (chatRef) chatRef.off();
-    document.getElementById("chat").innerHTML = '';
-    document.getElementById("loginDiv").style.display = "flex";
-    document.getElementById("chatDiv").style.display = "none";
-    document.getElementById("messageBar").style.display = "none";
-    emailInput.value = "";
-    passwordInput.value = "";
-    loginMsg.textContent = "";
-  }
+    let currentCandidateKey = null;
+    let currentCandidateData = null;
 
-  function loadUsers() {
-    const userListDiv = document.getElementById("userList");
-    userListDiv.innerHTML = '';
-    db.ref("users").once('value').then(snapshot => {
-      snapshot.forEach(child => {
-        if (child.key !== currentUser.uid) {
-          const div = document.createElement("div");
-          div.className = "user-item";
-          div.textContent = child.val().email;
-          div.dataset.uid = child.key;
-          div.onclick = () => {
-            selectedUser = child.key;
-            document.querySelectorAll(".user-item").forEach(item => item.classList.remove("active"));
-            div.classList.add("active");
-            loadChat();
-          };
-          userListDiv.appendChild(div);
+    viewParticipantsBtn.onclick = () => {
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
+    };
+    exitModalBtn.onclick = () => modal.style.display = "none";
+
+    async function uploadFile(file, folder, namePrefix) {
+      if (!file) return null;
+      const storageRef = sRef(storage, `${folder}/${namePrefix}_${file.name}_${Date.now()}`);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    }
+
+    function fillForm(data, key) {
+      currentCandidateKey = key;
+      currentCandidateData = data;
+      const ids = ["fullName", "age", "sex", "courseYear", "dob", "pob", "nationality", "religion", "cellphone", "email", "landline", "position", "reason"];
+      ids.forEach(id => document.getElementById(id).value = data[id] || "");
+
+      const affRows = document.querySelectorAll("#affiliations tbody tr");
+      data.affiliations?.forEach((aff, i) => {
+        if (affRows[i]) {
+          affRows[i].cells[0].querySelector("input").value = aff.club || "";
+          affRows[i].cells[1].querySelector("input").value = aff.position || "";
+          affRows[i].cells[2].querySelector("input").value = aff.year || "";
         }
       });
-    });
-  }
 
-  function loadChat() {
-    if (chatRef) chatRef.off();
-    const chatBox = document.getElementById("chat");
-    chatBox.innerHTML = '';
-    if (!selectedUser) return;
-    const path = `messages/${currentUser.uid}/${selectedUser}`;
-    chatRef = db.ref(path);
-    chatRef.on('child_added', snap => {
-      const msg = snap.val();
-      const div = document.createElement("div");
-      div.className = "msg " + (msg.from === currentUser.uid ? "from-me" : "from-other");
-      if (msg.text) div.textContent = msg.text;
-      if (msg.imageUrl) {
-        const img = document.createElement("img");
-        img.src = msg.imageUrl;
-        div.innerHTML = '';
-        div.appendChild(img);
+      const gradeRows = document.querySelectorAll("#grades tbody tr");
+      data.grades?.forEach((g, i) => {
+        if (gradeRows[i]) {
+          gradeRows[i].cells[0].querySelector("input").value = g.subject || "";
+          gradeRows[i].cells[1].querySelector("input").value = g.grade || "";
+        }
+      });
+    }
+
+    deleteRecordBtn.onclick = () => {
+      if (!currentCandidateKey) return alert("No candidate selected.");
+      if (confirm("Delete this candidate?")) {
+        remove(ref(db, `candidates/${currentCandidateKey}`)).then(() => {
+          alert("Deleted.");
+          document.getElementById("candidateForm").reset();
+          currentCandidateKey = null;
+        });
       }
-      if (msg.videoUrl) {
-        const video = document.createElement("video");
-        video.src = msg.videoUrl;
-        video.controls = true;
-        div.innerHTML = '';
-        div.appendChild(video);
-      }
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    });
-  }
-
-  function sendMessage() {
-    const msgInput = document.getElementById("msgInput");
-    const text = msgInput.value.trim();
-    if (!text || !selectedUser) return;
-
-    const msgObj = {
-      from: currentUser.uid,
-      to: selectedUser,
-      text,
-      timestamp: Date.now()
     };
 
-    const newKey = db.ref().push().key;
-    const updates = {};
-    updates[`messages/${currentUser.uid}/${selectedUser}/${newKey}`] = msgObj;
-    updates[`messages/${selectedUser}/${currentUser.uid}/${newKey}`] = msgObj;
+    async function generateWordDoc(data) {
+      const res = await fetch("ACES_Template_With_Placeholders.docx");
+      const content = await res.arrayBuffer();
+      const zip = new PizZip(content);
+      const doc = new window.docxtemplater().loadZip(zip);
+      doc.setData(data);
+      try {
+        doc.render();
+      } catch (e) {
+        alert("Error generating document.");
+        return;
+      }
+      const out = doc.getZip().generate({ type: "blob" });
+      saveAs(out, `${data.fullName.replace(/\s+/g, "_")}_CoC.docx`);
+    }
 
-    db.ref().update(updates).then(() => {
-      msgInput.value = '';
-    });
-  }
+    const form = document.getElementById("candidateForm");
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const fullName = document.getElementById("fullName").value;
+      const safeName = fullName.replace(/\s+/g, "_");
 
-  function sendMedia() {
-    const file = document.getElementById('fileInput').files[0];
-    if (!file || !selectedUser) return;
+      const photo = document.getElementById("photo").files[0];
+      const signature = document.getElementById("signature").files[0];
 
-    const reader = new FileReader();
-    const chatBox = document.getElementById("chat");
+      const photoUrl = photo ? await uploadFile(photo, "photos", safeName) : currentCandidateData?.photo || "";
+      const signatureUrl = signature ? await uploadFile(signature, "signatures", safeName) : currentCandidateData?.signature || "";
 
-    // Add loading message
-    const loadingDiv = document.createElement("div");
-    loadingDiv.className = "loading-msg";
-    loadingDiv.textContent = "Uploading media...";
-    chatBox.appendChild(loadingDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
+      const affiliations = Array.from(document.querySelectorAll("#affiliations tbody tr")).map(row => ({
+        club: row.cells[0].querySelector("input").value,
+        position: row.cells[1].querySelector("input").value,
+        year: row.cells[2].querySelector("input").value
+      }));
 
-    reader.onload = () => {
-      const newKey = db.ref().push().key;
-      const fileUrl = reader.result;
-      const isImage = file.type.startsWith("image");
-      const isVideo = file.type.startsWith("video");
+      const grades = Array.from(document.querySelectorAll("#grades tbody tr")).map(row => ({
+        subject: row.cells[0].querySelector("input").value,
+        grade: row.cells[1].querySelector("input").value
+      }));
 
-      const msgObj = {
-        from: currentUser.uid,
-        to: selectedUser,
-        timestamp: Date.now()
+      const data = {
+        fullName,
+        age: document.getElementById("age").value,
+        sex: document.getElementById("sex").value,
+        courseYear: document.getElementById("courseYear").value,
+        dob: document.getElementById("dob").value,
+        pob: document.getElementById("pob").value,
+        nationality: document.getElementById("nationality").value,
+        religion: document.getElementById("religion").value,
+        cellphone: document.getElementById("cellphone").value,
+        email: document.getElementById("email").value,
+        landline: document.getElementById("landline").value,
+        position: document.getElementById("position").value,
+        reason: document.getElementById("reason").value,
+        affiliations,
+        grades,
+        photo: photoUrl,
+        signature: signatureUrl
       };
 
-      if (isImage) msgObj.imageUrl = fileUrl;
-      if (isVideo) msgObj.videoUrl = fileUrl;
-
-      const updates = {};
-      updates[`messages/${currentUser.uid}/${selectedUser}/${newKey}`] = msgObj;
-      updates[`messages/${selectedUser}/${currentUser.uid}/${newKey}`] = msgObj;
-
-      db.ref().update(updates).then(() => {
-        loadingDiv.remove(); // remove "Uploading..." after sending
+      const target = currentCandidateKey ? ref(db, `candidates/${currentCandidateKey}`) : push(ref(db, "candidates"));
+      set(target, data).then(() => {
+        alert("Submitted!");
+        form.reset();
+        generateWordDoc(data);
+        currentCandidateKey = null;
       });
+    });
+
+    window.downloadImage = (src, name) => {
+      const a = document.createElement("a");
+      a.href = src;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     };
 
-    reader.readAsDataURL(file);
-  }
-</script>
+    const listDiv = document.getElementById("participantList");
+    const recordsContainer = document.getElementById("recordsContainer");
 
+    function createImageSection(label, url, name) {
+      if (!url) return "";
+      const safe = name.replace(/\s+/g, "_");
+      return `
+        <div class="image-container">
+          <strong>${label}:</strong><br>
+          <img src="${url}" class="thumbnail"><br>
+          <button class="download-btn" onclick="downloadImage('${url}', '${label}_${safe}')">Download ${label}</button>
+        </div>`;
+    }
+
+    onValue(ref(db, "candidates"), snap => {
+      listDiv.innerHTML = "";
+      recordsContainer.innerHTML = "";
+      snap.forEach(child => {
+        const val = child.val();
+        const key = child.key;
+        const div = document.createElement("div");
+        div.className = "record";
+        div.innerHTML = `
+  <strong>${val.fullName}</strong><br>
+  📌 Position: ${val.position}<br>
+  🎓 Course/Year: ${val.courseYear}<br>
+  📧 Email: ${val.email}<br>
+  📱 Cellphone: ${val.cellphone}<br><br>
+
+  ${createImageSection("Photo", val.photo, val.fullName)}
+  ${createImageSection("Signature", val.signature, val.fullName)}
+
+  <br>
+  <button class="submit-btn" onclick='fillForm(${JSON.stringify(val)}, "${key}")'>📋 View</button>
+  <button class="submit-btn" style="background-color:#e04e4e;" onclick='deleteRecordById("${key}")'>🗑️ Delete</button>
+  <button class="submit-btn" onclick='generateWordDoc(${JSON.stringify(val)})'>📄 Generate DOCX</button>
+`;
+        recordsContainer.appendChild(div);
+
+        const entry = document.createElement("div");
+        entry.style.cursor = "pointer";
+        entry.innerHTML = `<strong>${val.fullName}</strong><br>${val.email}`;
+        entry.onclick = () => {
+          fillForm(val, key);
+          modal.style.display = "none";
+        };
+        listDiv.appendChild(entry);
+      });
+    });
+
+    window.deleteRecordById = (key) => {
+      if (confirm("Are you sure to delete this record?")) {
+        remove(ref(db, `candidates/${key}`)).then(() => alert("Record deleted."));
+      }
+    };
+
+    window.generatePDF = function () {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+
+      const container = document.getElementById("recordsContainer");
+      const records = container.querySelectorAll(".record");
+
+      let y = 10;
+      records.forEach((record, index) => {
+        const text = record.innerText.replace(/📌|🎓|📧|📱/g, '');
+        const lines = pdf.splitTextToSize(text, 180);
+        pdf.text(lines, 10, y);
+        y += lines.length * 10 + 10;
+        if (y > 270 && index < records.length - 1) {
+          pdf.addPage();
+          y = 10;
+        }
+      });
+
+      pdf.save("Candidate_Records.pdf");
+    };
+  </script>
 </body>
 </html>
